@@ -1,0 +1,72 @@
+name: shopsearch
+
+services:
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: shopsearch_php
+    volumes:
+      - ../:/var/www/html
+    networks:
+      - shopsearch_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: shopsearch_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ../:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - shopsearch_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: shopsearch_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: shopsearch
+      MYSQL_USER: shopsearch_user
+      MYSQL_PASSWORD: shopsearch_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - shopsearch_network
+
+  redis:
+    image: redis:alpine
+    container_name: shopsearch_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - shopsearch_network
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: shopsearch_meilisearch
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: masterKey123
+      MEILI_ENV: development
+    volumes:
+      - meilisearch_data:/meili_data
+    networks:
+      - shopsearch_network
+
+networks:
+  shopsearch_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+  meilisearch_data:
