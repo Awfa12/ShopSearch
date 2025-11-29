@@ -24,7 +24,7 @@ This file tracks our progress through the ShopSearch e-commerce platform project
 
 ---
 
-## 🚧 Current Phase: Database Design (Week 1 - Days 1-3)
+## 🚧 Current Phase: Search Implementation (Week 2 - Days 8-14)
 
 ### Tasks to Complete
 
@@ -75,17 +75,106 @@ This file tracks our progress through the ShopSearch e-commerce platform project
 
 ---
 
+### Model Creation (Week 1 - Days 2-3)
+
+-   [x] Create Category model
+
+    -   [x] Fillable fields (name, slug, parent_id, description, active)
+    -   [x] Boolean casting for active field
+    -   [x] Parent relationship (belongsTo - self-referencing)
+    -   [x] Children relationship (hasMany - self-referencing)
+    -   [x] Products relationship (hasMany)
+
+-   [x] Create Brand model
+
+    -   [x] Fillable fields (name, slug, description, logo_url, active)
+    -   [x] Boolean casting for active field
+    -   [x] Products relationship (hasMany)
+
+-   [x] Create Product model
+    -   [x] Fillable fields (name, slug, description, price, category_id, brand_id, attributes, stock, image_url)
+    -   [x] Type casting (price as decimal:2, attributes as array, stock as integer)
+    -   [x] JSON attributes handling (automatic array conversion)
+    -   [x] Category relationship (belongsTo)
+    -   [x] Brand relationship (belongsTo - nullable)
+
+**Status:** ✅ **COMPLETE**
+
+---
+
+### Factories & Seeders (Week 1 - Days 4-5)
+
+-   [x] Create CategoryFactory
+
+    -   [x] Realistic category names
+    -   [x] Slug generation
+    -   [x] Optional descriptions
+
+-   [x] Create BrandFactory
+
+    -   [x] Realistic brand names
+    -   [x] Optional logo URLs
+    -   [x] Optional descriptions
+
+-   [x] Create ProductFactory
+
+    -   [x] Product name generation (adjective + color + noun)
+    -   [x] JSON attributes based on product type
+    -   [x] Realistic prices and stock
+    -   [x] Relationship handling
+
+-   [x] Create CategorySeeder
+
+    -   [x] Hierarchical category structure
+    -   [x] Parent-child relationships
+    -   [x] Idempotent (firstOrCreate)
+
+-   [x] Create BrandSeeder
+
+    -   [x] 50 brands created
+    -   [x] Idempotent (firstOrCreate)
+
+-   [x] Create ProductSeeder
+
+    -   [x] Optimized batch insertion
+    -   [x] Chunked insertion (1000 at a time)
+    -   [x] Uses existing categories and brands
+    -   [x] JSON attributes generation
+    -   [x] Seeded 50,000 products successfully
+
+-   [x] Update DatabaseSeeder
+
+    -   [x] Correct seeder order (Categories → Brands → Products)
+    -   [x] All seeders called
+
+-   [x] Add HasFactory trait to models
+    -   [x] Category model
+    -   [x] Brand model
+    -   [x] Product model
+
+**Status:** ✅ **COMPLETE**
+
+**Data Seeded:**
+
+-   Categories: 50+ (with hierarchical structure)
+-   Brands: 50
+-   Products: 50,000
+
+---
+
 ## 📋 Upcoming Phases
 
 ### Week 1: Foundation & Data (Days 4-7)
 
--   [ ] Create Model classes (Product, Category, Brand)
--   [ ] Define model relationships (hasMany, belongsTo)
--   [ ] Create factories for generating test data
--   [ ] Create seeders for categories and brands
--   [ ] Create optimized product seeder
--   [ ] Seed 50,000 products
--   [ ] Test data integrity
+-   [x] Create Model classes (Product, Category, Brand)
+-   [x] Define model relationships (hasMany, belongsTo)
+-   [x] Create factories for generating test data
+-   [x] Create seeders for categories and brands
+-   [x] Create optimized product seeder
+-   [x] Seed 50,000 products
+-   [x] Test data integrity
+
+**Status:** ✅ **COMPLETE**
 
 ### Week 2: Search Implementation (Days 8-14)
 
@@ -131,6 +220,17 @@ This file tracks our progress through the ShopSearch e-commerce platform project
 -   PHP extensions: core extensions use `docker-php-ext-install`, external use `pecl install`
 -   Docker images must be rebuilt after Dockerfile changes
 -   `.env` file contains sensitive data and should never be committed to Git
+-   Migrations use `Schema::create()` for new tables, `Schema::table()` for modifications
+-   Foreign keys ensure data integrity and enable cascade deletes
+-   JSON fields in MySQL can be cast to arrays in Laravel for easy manipulation
+-   Eloquent relationships: `belongsTo` = many-to-one, `hasMany` = one-to-many
+-   Self-referencing relationships allow hierarchical data (categories with parent/children)
+-   `HasFactory` trait enables `Model::factory()` method
+-   Batch inserts (`DB::table()->insert()`) are 5-10x faster than individual inserts
+-   Chunking large inserts prevents memory issues and query size limits
+-   `firstOrCreate()` makes seeders idempotent (safe to run multiple times)
+-   Factories generate realistic test data using Faker library
+-   Seeders populate database with test data in correct order
 
 ---
 
@@ -142,8 +242,18 @@ This file tracks our progress through the ShopSearch e-commerce platform project
     - **Solution:** Updated Dockerfile to use `php:8.4-fpm` and rebuilt container
 
 2. **Redis Extension Missing**
+
     - **Issue:** "Class Redis not found" error
     - **Solution:** Added `pecl install redis && docker-php-ext-enable redis` to Dockerfile
+
+3. **HasFactory Trait Missing**
+
+    - **Issue:** "Call to undefined method App\Models\Brand::factory()" error
+    - **Solution:** Added `use HasFactory;` trait to all models (Category, Brand, Product)
+
+4. **Duplicate Entry Errors in Seeders**
+    - **Issue:** Unique constraint violations when re-running seeders
+    - **Solution:** Changed from `create()` to `firstOrCreate()` in CategorySeeder and BrandSeeder to make them idempotent
 
 ---
 
@@ -151,9 +261,11 @@ This file tracks our progress through the ShopSearch e-commerce platform project
 
 -   [Laravel Migrations Documentation](https://laravel.com/docs/migrations)
 -   [Laravel Eloquent Relationships](https://laravel.com/docs/eloquent-relationships)
+-   [Laravel Factories Documentation](https://laravel.com/docs/eloquent-factories)
+-   [Laravel Seeders Documentation](https://laravel.com/docs/seeding)
 -   [Docker Compose Documentation](https://docs.docker.com/compose/)
 -   [Meilisearch Documentation](https://www.meilisearch.com/docs)
 
 ---
 
-**Last Updated:** [Date will be updated as we progress]
+**Last Updated:** November 29, 2025 - Factories, Seeders, and 50,000 products seeded successfully
