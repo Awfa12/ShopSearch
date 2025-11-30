@@ -24,7 +24,7 @@
 
     <div class="flex flex-col lg:flex-row gap-6">
         {{-- Filters Sidebar --}}
-        <div class="lg:w-64 flex-shrink-0">
+        <div class="lg:w-64 shrink-0">
             <div class="bg-white rounded-lg shadow p-4 sticky top-4">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold text-gray-900">Filters</h2>
