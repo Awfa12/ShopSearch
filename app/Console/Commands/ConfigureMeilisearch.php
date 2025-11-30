@@ -44,7 +44,16 @@ class ConfigureMeilisearch extends Command
             'stock',
         ]);
 
+        // Increase max total hits limit (default is 1000)
+        // This allows returning more than 1000 results
+        $index->updateSettings([
+            'pagination' => [
+                'maxTotalHits' => 100000, // Allow up to 100,000 results
+            ],
+        ]);
+
         $this->info('Filterable attributes configured successfully!');
         $this->info('Filterable: category_id, brand_id, price, stock');
+        $this->info('Max total hits limit increased to 100,000');
     }
 }

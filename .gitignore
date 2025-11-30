@@ -1,6 +1,10 @@
 *.log
 .DS_Store
 .env
+
+# Ignore all markdown files except README
+*.md
+!README.md
 .env.backup
 .env.production
 .phpactor.json
