@@ -66,8 +66,23 @@ class ProductSearch extends Component
         $this->resetPage();
     }
 
+    /**
+     * Normalize empty strings to null for proper comparison
+     */
+    private function normalizeFilters(): void
+    {
+        // Convert empty strings to null
+        $this->categoryId = $this->categoryId !== '' ? $this->categoryId : null;
+        $this->brandId = $this->brandId !== '' ? $this->brandId : null;
+        $this->minPrice = ($this->minPrice !== '' && $this->minPrice !== null) ? $this->minPrice : null;
+        $this->maxPrice = ($this->maxPrice !== '' && $this->maxPrice !== null) ? $this->maxPrice : null;
+    }
+
     public function render()
     {
+        // Normalize empty strings to null
+        $this->normalizeFilters();
+
         // Check if we have any search criteria
         $hasSearchCriteria = !empty(trim($this->query)) || $this->categoryId || $this->brandId || $this->minPrice !== null || $this->maxPrice !== null;
         
